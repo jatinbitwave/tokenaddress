@@ -5,7 +5,7 @@ import time # To add a small delay between requests to be kind to the API
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="Token Address Finder",
+    page_title="Token Address & Blockchain Finder",
     page_icon="🔗",
     layout="wide",
 )
@@ -58,7 +58,7 @@ def get_token_data(base_url, ticker):
 st.title("🔗 Token Address Finder")
 
 # --- Step 1: Upload the file with token tickers ---
-st.header("Step 1: Upload Your Report File")
+st.header("Step 1: Upload Your Balance Report File")
 uploaded_tickers_file = st.file_uploader(
     "Upload a CSV file",
     type=['csv'],
