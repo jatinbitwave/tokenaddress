@@ -55,7 +55,7 @@ def get_token_data(base_url, ticker):
         return "Processing Error", "Processing Error"
 
 # --- Main Application UI ---
-st.title("🔗 Token Address Finder")
+st.title("🔗 Token Address & Blockchain Finder")
 
 # --- Step 1: Upload the file with token tickers ---
 st.header("Step 1: Upload Your Balance Report File")
