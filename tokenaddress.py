@@ -72,20 +72,20 @@ if st.button("Find Addresses", type="primary"):
     else:
         with st.spinner('Processing your report... This may take a moment.'):
             try:
-                # Load the uploaded CSV file into a pandas DataFrame
-                df = pd.read_csv(uploaded_tickers_file, header=None)
+                # Load the uploaded CSV file into a pandas DataFrame, using the first row as the header.
+                df = pd.read_csv(uploaded_tickers_file)
                 
-                # Assume the first column (Column A) contains the tickers.
-                ticker_column = df.columns[0]
+                # Assume the first column contains the tickers.
+                ticker_column_name = df.columns[0]
 
-                st.info(f"Found {len(df)} rows to process from Column A. Starting API calls...")
+                st.info(f"Found {len(df)} rows to process from column '{ticker_column_name}'. Starting API calls...")
                 
                 addresses = []
                 progress_bar = st.progress(0)
                 total_tickers = len(df)
 
                 # Iterate through each ticker in the first column and fetch its address
-                for i, ticker in enumerate(df[ticker_column]):
+                for i, ticker in enumerate(df[ticker_column_name]):
                     address = get_address(api_base_url, ticker)
                     addresses.append(address)
                     # Be kind to the API by adding a small delay
@@ -98,9 +98,8 @@ if st.button("Find Addresses", type="primary"):
 
                 st.success("Processing complete!")
                 st.subheader("Results")
-                # Display the dataframe, but this time with headers for clarity
-                # Rename original columns for display since we read with header=None
-                df.columns = [f'Column {chr(65+i)}' for i in range(len(df.columns)-1)] + ['token address']
+                
+                # Display the dataframe with its original headers plus the new one.
                 st.dataframe(df, use_container_width=True)
 
                 # --- Download Button ---
@@ -114,5 +113,3 @@ if st.button("Find Addresses", type="primary"):
 
             except Exception as e:
                 st.error(f"An error occurred during processing: {e}")
-
-
