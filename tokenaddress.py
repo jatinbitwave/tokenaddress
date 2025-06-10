@@ -48,45 +48,34 @@ st.markdown("""
 This application is configured to process your specific report format.
 
 **How to use:**
-1.  **Upload your report** (Excel file). The app will automatically read the **first tab**.
-2.  The app will assume tickers are in **Column A**.
-3.  **Provide the base API URL.** The app will append each ticker to this URL to find its address.
-4.  Click the **'Find Addresses'** button to see the results. The new addresses will be in a column named `token address`.
+1.  **Upload your report** (CSV file). The app will automatically read the tickers from **Column A**.
+2.  Click the **'Find Addresses'** button to see the results. The new addresses will be in a column named `token address`.
 """)
 
 # --- Step 1: Upload the file with token tickers ---
 st.header("Step 1: Upload Your Report File")
 uploaded_tickers_file = st.file_uploader(
-    "Upload an Excel file",
-    type=['xlsx'],
-    help="The app will process the first sheet of this file."
+    "Upload a CSV file",
+    type=['csv'],
+    help="The app will process the first column of this file."
 )
 
-# --- Step 2: Provide the API endpoint ---
-st.header("Step 2: Provide the API Base URL")
-api_base_url = st.text_input(
-    "Enter the API base URL:",
-    "https://address-svc-utyjy373hq-uc.a.run.app/symbols",
-    help="The app will append '/{ticker}' from Column A to this URL for each token."
-)
-
-
-# --- Step 3: Process the data and display results ---
-st.header("Step 3: Process and View Results")
+# --- Step 2: Process the data and display results ---
+st.header("Step 2: Process and View Results")
 
 if st.button("Find Addresses", type="primary"):
+    # The API URL is now hardcoded
+    api_base_url = "https://address-svc-utyjy373hq-uc.a.run.app/symbols"
+
     if uploaded_tickers_file is None:
-        st.warning("Please upload an Excel report file first.")
-    elif not api_base_url:
-        st.warning("Please provide the API base URL.")
+        st.warning("Please upload a CSV report file first.")
     else:
         with st.spinner('Processing your report... This may take a moment.'):
             try:
-                # Load the first sheet of the uploaded Excel file into a pandas DataFrame
-                df = pd.read_excel(uploaded_tickers_file, sheet_name=0, header=None)
+                # Load the uploaded CSV file into a pandas DataFrame
+                df = pd.read_csv(uploaded_tickers_file, header=None)
                 
                 # Assume the first column (Column A) contains the tickers.
-                # Let's get the name of the first column to use it.
                 ticker_column = df.columns[0]
 
                 st.info(f"Found {len(df)} rows to process from Column A. Starting API calls...")
@@ -105,7 +94,6 @@ if st.button("Find Addresses", type="primary"):
                     progress_bar.progress((i + 1) / total_tickers)
 
                 # Create the new column with the specified name "token address"
-                # This will be added as the last column, which will be 'G' if you have A-F.
                 df['token address'] = addresses
 
                 st.success("Processing complete!")
@@ -126,4 +114,5 @@ if st.button("Find Addresses", type="primary"):
 
             except Exception as e:
                 st.error(f"An error occurred during processing: {e}")
+
 
