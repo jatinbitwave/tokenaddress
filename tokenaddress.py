@@ -56,13 +56,6 @@ def get_token_data(base_url, ticker):
 
 # --- Main Application UI ---
 st.title("🔗 Token Address Finder")
-st.markdown("""
-This application is configured to process your specific report format.
-
-**How to use:**
-1.  **Upload your report** (CSV file). The app will automatically read the tickers from **Column A**.
-2.  Click the **'Find Addresses'** button to see the results. The new addresses will be in a column named `token address` and the network ID in a column named `Blockchain`.
-""")
 
 # --- Step 1: Upload the file with token tickers ---
 st.header("Step 1: Upload Your Report File")
@@ -75,7 +68,7 @@ uploaded_tickers_file = st.file_uploader(
 # --- Step 2: Process the data and display results ---
 st.header("Step 2: Process and View Results")
 
-if st.button("Find Addresses", type="primary"):
+if st.button("Validate", type="primary"):
     # The API URL is now hardcoded
     api_base_url = "https://address-svc-utyjy373hq-uc.a.run.app/symbols"
 
