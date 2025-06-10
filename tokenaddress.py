@@ -48,7 +48,7 @@ st.markdown("""
 This application is configured to process your specific report format.
 
 **How to use:**
-1.  **Upload your report** (CSV file). The app will automatically read the tickers from **Column A**.
+1.  **Upload your report** (CSV file).
 2.  Click the **'Find Addresses'** button to see the results. The new addresses will be in a column named `token address`.
 """)
 
