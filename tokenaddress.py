@@ -17,6 +17,9 @@ def convert_df_to_csv(df):
     return df.to_csv(index=False).encode('utf-8')
 
 # --- Function to fetch address and networkId from API ---
+# This decorator will cache the results of the API call. 
+# If the same ticker is requested again, it will return the stored result instantly.
+@st.cache_data
 def get_token_data(base_url, ticker):
     """Fetches a single token address and networkId from the API."""
     # Ensure ticker is a string and handle potential float inputs from pandas
@@ -36,6 +39,10 @@ def get_token_data(base_url, ticker):
         data = response.json()
         address = data.get('address', 'Address not found')
         network_id = data.get('networkId', 'NetworkId not found')
+        
+        # We add the sleep inside the cached function
+        time.sleep(0.1) # Be kind to the API by adding a small delay
+        
         return address, network_id
         
     except requests.exceptions.HTTPError:
@@ -53,10 +60,12 @@ st.markdown("""
 This application is configured to process your specific report format.
 
 **How to use:**
-1.  **Upload your report** (CSV file).
+1.  **Upload your report** (CSV file). The app will automatically read the tickers from **Column A**.
+2.  Click the **'Find Addresses'** button to see the results. The new addresses will be in a column named `token address` and the network ID in a column named `Blockchain`.
+""")
 
 # --- Step 1: Upload the file with token tickers ---
-st.header("Step 1: Upload Your Balance Report File")
+st.header("Step 1: Upload Your Report File")
 uploaded_tickers_file = st.file_uploader(
     "Upload a CSV file",
     type=['csv'],
@@ -66,7 +75,7 @@ uploaded_tickers_file = st.file_uploader(
 # --- Step 2: Process the data and display results ---
 st.header("Step 2: Process and View Results")
 
-if st.button("Validate", type="primary"):
+if st.button("Find Addresses", type="primary"):
     # The API URL is now hardcoded
     api_base_url = "https://address-svc-utyjy373hq-uc.a.run.app/symbols"
 
@@ -90,11 +99,11 @@ if st.button("Validate", type="primary"):
 
                 # Iterate through each ticker in the first column and fetch its data
                 for i, ticker in enumerate(df[ticker_column_name]):
+                    # This function call will now be cached by Streamlit
                     address, network_id = get_token_data(api_base_url, ticker)
                     addresses.append(address)
                     network_ids.append(network_id)
-                    # Be kind to the API by adding a small delay
-                    time.sleep(0.1)
+
                     # Update progress bar
                     progress_bar.progress((i + 1) / total_tickers)
 
