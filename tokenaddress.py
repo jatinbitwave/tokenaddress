@@ -6,7 +6,7 @@ import time # To add a small delay between requests to be kind to the API
 # --- Page Configuration ---
 st.set_page_config(
     page_title="Token Address Finder",
-    page_icon="�",
+    page_icon="🔗",
     layout="wide",
 )
 
@@ -127,4 +127,3 @@ if st.button("Find Addresses", type="primary"):
             except Exception as e:
                 st.error(f"An error occurred during processing: {e}")
 
-�
