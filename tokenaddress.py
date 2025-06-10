@@ -58,7 +58,7 @@ This application is configured to process your specific report format.
 """)
 
 # --- Step 1: Upload the file with token tickers ---
-st.header("Step 1: Upload Your Report File")
+st.header("Step 1: Upload Your Balance Report File")
 uploaded_tickers_file = st.file_uploader(
     "Upload a CSV file",
     type=['csv'],
@@ -68,7 +68,7 @@ uploaded_tickers_file = st.file_uploader(
 # --- Step 2: Process the data and display results ---
 st.header("Step 2: Process and View Results")
 
-if st.button("Find Addresses", type="primary"):
+if st.button("Validate", type="primary"):
     # The API URL is now hardcoded
     api_base_url = "https://address-svc-utyjy373hq-uc.a.run.app/symbols"
 
